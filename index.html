@@ -2,7 +2,7 @@
 <title>PROYECTOR · V&LIVING — tu dinero en el tiempo</title>
 <meta name="description" content="Proyecta el patrimonio de una propiedad por escenarios y plazos. Modelo declarado, no promesa.">
 <style>
-:root{--nar:#F85702;--tin:#141210;--fon:#FBF7F2}
+:root{--nar:#F75602;--tin:#141210;--fon:#FBF7F2}
 *{box-sizing:border-box;margin:0}body{font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;background:var(--fon);color:var(--tin)}
 .wrap{max-width:960px;margin:0 auto;padding:0 18px}
 header{padding:16px 0;display:flex;align-items:center;gap:10px}header img{height:34px}header b{letter-spacing:2px;font-size:.85rem}
@@ -18,11 +18,11 @@ input{width:100%;border:1.5px solid rgba(0,0,0,.15);border-radius:11px;padding:1
 input:focus{outline:2px solid var(--nar);border-color:var(--nar)}
 .chips{display:flex;gap:7px;flex-wrap:wrap}
 .chip{border:1.5px solid rgba(0,0,0,.14);background:#fff;border-radius:24px;padding:8px 14px;font-weight:800;font-size:.8rem;cursor:pointer;transition:.15s}
-.chip.on{background:var(--nar);border-color:var(--nar);color:#fff;box-shadow:0 6px 14px rgba(248,87,2,.35)}
+.chip.on{background:var(--nar);border-color:var(--nar);color:#fff;box-shadow:0 6px 14px rgba(247,86,2,.35)}
 .res{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
 @media(max-width:700px){.res{grid-template-columns:1fr}}
 .esc{background:#fff;border:1.5px solid rgba(0,0,0,.08);border-radius:18px;padding:16px;transition:.2s;box-shadow:0 8px 26px rgba(20,18,16,.05)}
-.esc.base{border-color:var(--nar);box-shadow:0 10px 30px rgba(248,87,2,.18)}
+.esc.base{border-color:var(--nar);box-shadow:0 10px 30px rgba(247,86,2,.18)}
 .esc h3{font-size:.72rem;letter-spacing:2px}.esc.base h3{color:var(--nar)}
 .esc .big{font-size:1.75rem;font-weight:800;letter-spacing:-1px;margin:6px 0 2px}
 .esc .roi{font-size:.8rem;font-weight:800;color:#1B8A4B}
@@ -98,7 +98,7 @@ function calc(){
   const W=720,H=240,px=54,py=22;
   const maxY=Math.max(...filas.map(f=>f.patr))*1.06||1;
   const X=t=>px+(W-px-16)*t/plazo, Y=v=>H-py-(H-py-30)*v/maxY;
-  const colores={conservador:"#C9B8A8",base:"#F85702",agresivo:"#8A7BFF"};
+  const colores={conservador:"#C9B8A8",base:"#F75602",agresivo:"#8A7BFF"};
   let s="";
   for(const f of [0,.5,1]){const v=maxY*f;s+=`<line x1="${px}" y1="${Y(v)}" x2="${W-16}" y2="${Y(v)}" stroke="rgba(0,0,0,.07)"/><text x="${px-6}" y="${Y(v)+4}" text-anchor="end" font-size="9" fill="rgba(0,0,0,.45)">${fmt(v)}</text>`;}
   filas.forEach(f=>{
