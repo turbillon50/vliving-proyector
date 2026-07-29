@@ -1,0 +1,132 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROYECTOR · V&LIVING — tu dinero en el tiempo</title>
+<meta name="description" content="Proyecta el patrimonio de una propiedad por escenarios y plazos. Modelo declarado, no promesa.">
+<style>
+:root{--nar:#F85702;--tin:#141210;--fon:#FBF7F2}
+*{box-sizing:border-box;margin:0}body{font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;background:var(--fon);color:var(--tin)}
+.wrap{max-width:960px;margin:0 auto;padding:0 18px}
+header{padding:16px 0;display:flex;align-items:center;gap:10px}header img{height:34px}header b{letter-spacing:2px;font-size:.85rem}
+.hero{padding:26px 0 8px}.hero h1{font-size:clamp(1.7rem,5vw,2.6rem);letter-spacing:-1px;line-height:1.08}
+.hero h1 em{color:var(--nar);font-style:normal}
+.hero p{margin-top:10px;max-width:560px;opacity:.8;font-size:.95rem}
+section{padding:24px 0 4px}h2{font-size:.8rem;letter-spacing:2.5px;color:var(--nar)}
+.card{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:18px;padding:18px;box-shadow:0 8px 26px rgba(20,18,16,.05);margin-top:14px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:700px){.grid{grid-template-columns:1fr 1fr}}
+label{font-size:.68rem;font-weight:800;letter-spacing:1px;opacity:.6;display:block;margin-bottom:5px}
+input{width:100%;border:1.5px solid rgba(0,0,0,.15);border-radius:11px;padding:10px 12px;font-weight:800;font-size:1rem;background:#fff;font-family:inherit}
+input:focus{outline:2px solid var(--nar);border-color:var(--nar)}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{border:1.5px solid rgba(0,0,0,.14);background:#fff;border-radius:24px;padding:8px 14px;font-weight:800;font-size:.8rem;cursor:pointer;transition:.15s}
+.chip.on{background:var(--nar);border-color:var(--nar);color:#fff;box-shadow:0 6px 14px rgba(248,87,2,.35)}
+.res{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+@media(max-width:700px){.res{grid-template-columns:1fr}}
+.esc{background:#fff;border:1.5px solid rgba(0,0,0,.08);border-radius:18px;padding:16px;transition:.2s;box-shadow:0 8px 26px rgba(20,18,16,.05)}
+.esc.base{border-color:var(--nar);box-shadow:0 10px 30px rgba(248,87,2,.18)}
+.esc h3{font-size:.72rem;letter-spacing:2px}.esc.base h3{color:var(--nar)}
+.esc .big{font-size:1.75rem;font-weight:800;letter-spacing:-1px;margin:6px 0 2px}
+.esc .roi{font-size:.8rem;font-weight:800;color:#1B8A4B}
+.esc .det{font-size:.7rem;opacity:.65;margin-top:8px;line-height:1.5}
+.esc .nota{font-size:.66rem;opacity:.5;margin-top:8px;font-style:italic}
+svg{width:100%;height:auto;display:block}
+.banco{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.banco .n{font-size:1.5rem;font-weight:800;letter-spacing:-1px}
+.banco .vs{font-size:.75rem;opacity:.7;max-width:420px;line-height:1.5}
+.gana{color:#1B8A4B}.pierde{color:#C0392B}
+.metodo{font-size:.7rem;opacity:.55;line-height:1.5;margin:26px 0 0;padding-top:14px;border-top:1px dashed rgba(0,0,0,.15)}
+.suite{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.suite a{font-size:.7rem;font-weight:700;color:var(--tin);border:1px solid rgba(0,0,0,.14);border-radius:20px;padding:6px 12px;text-decoration:none}
+.suite a:hover{border-color:var(--nar);color:var(--nar)}
+footer{padding:34px 0 40px;text-align:center;font-size:.72rem;opacity:.6;line-height:1.7}
+.in{opacity:0;transform:translateY(10px);animation:in .6s forwards}@keyframes in{to{opacity:1;transform:none}}
+</style></head><body>
+<div class="wrap">
+<header><img src="/assets/vliving-logo.png" alt="V&LIVING"><b>PROYECTOR</b></header>
+<div class="hero in">
+<h1>Tu dinero,<br>proyectado en <em>el tiempo</em>.</h1>
+<p>Mueve precio, plazo, renta y ocupación. El Proyector corre 3 escenarios ligados al ciclo y te dice qué pasa con tu patrimonio — y contra qué lo comparas. Modelo declarado, no promesa.</p>
+</div>
+<section><h2>TU JUGADA</h2>
+<div class="card in">
+<div class="grid">
+<div><label>PRECIO (USD)</label><input id="precio" type="number" value="155000" min="10000" step="5000"></div>
+<div><label>RENTA / MES (USD)</label><input id="renta" type="number" value="1400" min="0" step="50"></div>
+<div><label>OCUPACIÓN %</label><input id="ocup" type="number" value="62" min="0" max="100"></div>
+</div>
+<div style="margin-top:14px"><label>PLAZO (AÑOS)</label><div class="chips" id="plazos"></div></div>
+<div style="margin-top:14px;max-width:260px"><label>TASA ALTERNATIVA % ANUAL (tú la eliges)</label><input id="tasaAlt" type="number" value="8" min="0" max="30" step="0.5"></div>
+</div></section>
+<section><h2>PATRIMONIO A <span id="plazoTit">10</span> AÑOS · VALOR + RENTAS</h2>
+<div class="res in" id="resultados"></div>
+<div class="card in"><svg id="curvas" viewBox="0 0 720 240" role="img" aria-label="Curvas de patrimonio"></svg></div>
+</section>
+<section><h2>CONTRA EL BANCO</h2>
+<div class="card in banco">
+<div><label>MISMO DINERO A TU TASA ALTERNATIVA</label><div class="n" id="bancoN">—</div></div>
+<div class="vs" id="bancoVs">—</div>
+</div></section>
+<p class="metodo" id="metodo"></p>
+<div class="suite">
+<a href="https://vliving-frecuencia.vercel.app">FRECUENCIA · el ciclo</a>
+<a href="https://pulso-neutro.vercel.app">PULSO · la conversación</a>
+<a href="https://vliving.site">V&LIVING · zonas y propiedades</a>
+</div>
+<footer>V&amp;LIVING · PROYECTOR<br>Proyectar no es prometer. Es pensar con números.<br><span style="opacity:.7">API abierta: /api/escenarios</span></footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const fmt=n=>"$"+Math.round(n).toLocaleString("en-US");
+let D=null, plazo=10;
+function calc(){
+  const precio=+$("precio").value||0, renta=+$("renta").value||0, ocup=(+$("ocup").value||0)/100, tAlt=(+$("tasaAlt").value||0)/100;
+  $("plazoTit").textContent=plazo;
+  const rentaAnual=renta*12*ocup;
+  const filas=D.escenarios.map(e=>{
+    const valor=precio*Math.pow(1+e.g,plazo);
+    const rentas=rentaAnual*plazo;
+    const patr=valor+rentas;
+    const roi=precio>0?((patr/precio-1)*100):0;
+    return {...e,valor,rentas,patr,roi};
+  });
+  $("resultados").innerHTML=filas.map(f=>`<div class="esc${f.id==="base"?" base":""}">
+    <h3>${f.n.toUpperCase()} · ${(f.g*100).toFixed(0)}%</h3>
+    <div class="big">${fmt(f.patr)}</div>
+    <div class="roi">ROI +${f.roi.toFixed(0)}%</div>
+    <div class="det">Valor propiedad: ${fmt(f.valor)}<br>Rentas acumuladas: ${fmt(f.rentas)}</div>
+    <div class="nota">${f.nota}</div></div>`).join("");
+  // curvas
+  const W=720,H=240,px=54,py=22;
+  const maxY=Math.max(...filas.map(f=>f.patr))*1.06||1;
+  const X=t=>px+(W-px-16)*t/plazo, Y=v=>H-py-(H-py-30)*v/maxY;
+  const colores={conservador:"#C9B8A8",base:"#F85702",agresivo:"#8A7BFF"};
+  let s="";
+  for(const f of [0,.5,1]){const v=maxY*f;s+=`<line x1="${px}" y1="${Y(v)}" x2="${W-16}" y2="${Y(v)}" stroke="rgba(0,0,0,.07)"/><text x="${px-6}" y="${Y(v)+4}" text-anchor="end" font-size="9" fill="rgba(0,0,0,.45)">${fmt(v)}</text>`;}
+  filas.forEach(f=>{
+    const pts=[];for(let t=0;t<=plazo;t++){pts.push(X(t)+","+Y(precio*Math.pow(1+f.g,t)+rentaAnual*t));}
+    s+=`<polyline points="${pts.join(" ")}" fill="none" stroke="${colores[f.id]}" stroke-width="${f.id==="base"?3.5:2}" stroke-linecap="round"/>`;
+    const[lx,ly]=pts[pts.length-1].split(",");
+    s+=`<circle cx="${lx}" cy="${ly}" r="4" fill="${colores[f.id]}"/>`;
+  });
+  for(let t=0;t<=plazo;t+=plazo>=15?5:(plazo>5?2:1)) s+=`<text x="${X(t)}" y="${H-4}" text-anchor="middle" font-size="9" fill="rgba(0,0,0,.45)">${t===0?"hoy":"+"+t}</text>`;
+  $("curvas").innerHTML=s;
+  // banco
+  const banco=precio*Math.pow(1+tAlt,plazo);
+  const base=filas.find(f=>f.id==="base");
+  const dif=base.patr-banco;
+  $("bancoN").textContent=fmt(banco);
+  $("bancoVs").innerHTML=`Ese mismo ${fmt(precio)} a ${(tAlt*100).toFixed(1)}% anual compuesto llega a <b>${fmt(banco)}</b> en ${plazo} años. El escenario base de la propiedad llega a <b>${fmt(base.patr)}</b>: <b class="${dif>=0?"gana":"pierde"}">${dif>=0?"+"+fmt(dif)+" a favor de la propiedad":fmt(dif)+" — el banco gana con estos supuestos"}</b>. Cambia la tasa y decide tú.`;
+}
+async function main(){
+  D=await (await fetch("/api/escenarios")).json();
+  const df=D.defaults, q=new URLSearchParams(location.search);
+  $("precio").value=q.get("precio")||df.precio; $("renta").value=q.get("renta")||df.rentaMes; $("ocup").value=q.get("ocup")||df.ocupacionP; $("tasaAlt").value=df.tasaAltP; plazo=df.plazo;
+  $("plazos").innerHTML=D.plazos.map(p=>`<button class="chip${p===plazo?" on":""}" data-p="${p}">${p} años</button>`).join("");
+  $("metodo").textContent="MÉTODO · "+D.metodo;
+  document.querySelectorAll("#plazos .chip").forEach(c=>c.onclick=()=>{plazo=+c.dataset.p;
+    document.querySelectorAll("#plazos .chip").forEach(x=>x.classList.toggle("on",+x.dataset.p===plazo));calc();});
+  ["precio","renta","ocup","tasaAlt"].forEach(id=>$(id).oninput=calc);
+  calc();
+}
+main().catch(e=>{$("bancoVs").textContent="No pude cargar: "+e.message});
+</script>
+</body></html>

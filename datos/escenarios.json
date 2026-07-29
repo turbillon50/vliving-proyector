@@ -1,0 +1,15 @@
+{
+ "metodo": "Proyección financiera = MODELO, no promesa. Escenarios de apreciación ligados al ciclo Frecuencia: conservador 4%, base 6%, agresivo 7% anual compuesto (nominal USD). La renta se modela plana con tu ocupación. La alternativa bancaria es configurable por ti. Ningún número aquí es garantía de rendimiento.",
+ "escenarios": [
+  {"id":"conservador","n":"Conservador","g":0.04,"nota":"Piso del modelo: crecimiento lento post-ajuste."},
+  {"id":"base","n":"Base","g":0.06,"nota":"Trayectoria central del ciclo Frecuencia."},
+  {"id":"agresivo","n":"Agresivo","g":0.07,"nota":"Recuperación fuerte tipo 2016-2019."}
+ ],
+ "plazos":[5,10,15,20],
+ "defaults":{"precio":155000,"engancheP":30,"plazo":10,"rentaMes":1400,"ocupacionP":62,"tasaAltP":8},
+ "notas":{
+  "renta":"Renta corta típica del nicho: el ingreso depende de operación, temporada y ocupación real.",
+  "tasaAlt":"Compara contra dejar el mismo dinero en un instrumento a la tasa que TÚ elijas (default 8% anual, editable).",
+  "fx":"Todo en USD nominal. El tipo de cambio es otro riesgo/oportunidad aparte."
+ }
+}
