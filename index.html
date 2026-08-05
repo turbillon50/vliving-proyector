@@ -33,6 +33,7 @@ svg{width:100%;height:auto;display:block}
 .banco .n{font-size:1.5rem;font-weight:800;letter-spacing:-1px}
 .banco .vs{font-size:.75rem;opacity:.7;max-width:420px;line-height:1.5}
 .gana{color:#1B8A4B}.pierde{color:#C0392B}
+.prelimNota{font-size:.72rem;font-weight:700;color:#B84A0A;background:#FFF1E8;border:1px solid #F7C7A8;border-radius:10px;padding:8px 12px;margin-top:10px}
 .metodo{font-size:.7rem;opacity:.55;line-height:1.5;margin:26px 0 0;padding-top:14px;border-top:1px dashed rgba(0,0,0,.15)}
 .suite{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 .suite a{font-size:.7rem;font-weight:700;color:var(--tin);border:1px solid rgba(0,0,0,.14);border-radius:20px;padding:6px 12px;text-decoration:none}
@@ -46,6 +47,10 @@ footer{padding:34px 0 40px;text-align:center;font-size:.72rem;opacity:.6;line-he
 <h1>Tu dinero,<br>proyectado en <em>el tiempo</em>.</h1>
 <p>Mueve precio, plazo, renta y ocupación. El Proyector corre 3 escenarios ligados al ciclo y te dice qué pasa con tu patrimonio — y contra qué lo comparas. Modelo declarado, no promesa.</p>
 </div>
+<section><h2>PLAZA</h2>
+<div class="chips in" id="fplazas"></div>
+<p class="prelimNota in" id="prelimNota" style="display:none">Presets preliminares del catálogo Rentas DNA — plaza en apertura: ajusta los números a tu producto real.</p>
+</section>
 <section><h2>TU JUGADA</h2>
 <div class="card in">
 <div class="grid">
@@ -75,6 +80,16 @@ footer{padding:34px 0 40px;text-align:center;font-size:.72rem;opacity:.6;line-he
 </div>
 <script>
 const $=id=>document.getElementById(id);
+const PLAZAS=[
+ {n:"Tulum",precio:155000,renta:1400,ocup:62,pre:false},
+ {n:"Cancún",precio:250000,renta:3600,ocup:68,pre:true},
+ {n:"Playa del Carmen",precio:180000,renta:2330,ocup:64,pre:true},
+ {n:"Los Cabos",precio:350000,renta:5800,ocup:60,pre:true},
+ {n:"Puerto Vallarta",precio:220000,renta:2720,ocup:64,pre:true},
+ {n:"Mérida",precio:150000,renta:1340,ocup:52,pre:true},
+ {n:"CDMX",precio:160000,renta:2080,ocup:72,pre:true}
+];
+let plazaSel="Tulum";
 const fmt=n=>"$"+Math.round(n).toLocaleString("en-US");
 let D=null, plazo=10;
 function calc(){
@@ -124,6 +139,12 @@ async function main(){
   $("metodo").textContent="MÉTODO · "+D.metodo;
   document.querySelectorAll("#plazos .chip").forEach(c=>c.onclick=()=>{plazo=+c.dataset.p;
     document.querySelectorAll("#plazos .chip").forEach(x=>x.classList.toggle("on",+x.dataset.p===plazo));calc();});
+  $("fplazas").innerHTML=PLAZAS.map(z=>`<button class="chip${z.n===plazaSel?" on":""}" data-z="${z.n}">${z.n}</button>`).join("");
+  document.querySelectorAll("#fplazas .chip").forEach(c=>c.onclick=()=>{plazaSel=c.dataset.z;
+    const z=PLAZAS.find(x=>x.n===plazaSel);
+    $("precio").value=z.precio;$("renta").value=z.renta;$("ocup").value=z.ocup;
+    $("prelimNota").style.display=z.pre?"":"none";
+    document.querySelectorAll("#fplazas .chip").forEach(x=>x.classList.toggle("on",x.dataset.z===plazaSel));calc();});
   ["precio","renta","ocup","tasaAlt"].forEach(id=>$(id).oninput=calc);
   calc();
 }
