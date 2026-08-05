@@ -1,6 +1,17 @@
 <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PROYECTOR · V&LIVING — tu dinero en el tiempo</title>
 <meta name="description" content="Proyecta el patrimonio de una propiedad por escenarios y plazos. Modelo declarado, no promesa.">
+<meta name="theme-color" content="#F75602">
+<link rel="canonical" href="https://vliving-proyector.vercel.app/">
+<link rel="icon" href="/assets/vliving-logo.png">
+<link rel="apple-touch-icon" href="/assets/vliving-logo.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta property="og:title" content="Proyector · V&LIVING">
+<meta property="og:description" content="Tu dinero proyectado en el tiempo: 3 escenarios ligados al ciclo, con presets por plaza.">
+<meta property="og:url" content="https://vliving-proyector.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_MX">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Proyector · V&LIVING","url":"https://vliving-proyector.vercel.app/","description":"Tu dinero proyectado en el tiempo: 3 escenarios ligados al ciclo, con presets por plaza.","inLanguage":"es-MX","applicationCategory":"FinanceApplication","isPartOf":{"@type":"WebSite","name":"V&LIVING","url":"https://vliving.site"}}</script>
 <style>
 :root{--nar:#F75602;--tin:#141210;--fon:#FBF7F2}
 *{box-sizing:border-box;margin:0}body{font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;background:var(--fon);color:var(--tin)}
@@ -40,6 +51,8 @@ svg{width:100%;height:auto;display:block}
 .suite a:hover{border-color:var(--nar);color:var(--nar)}
 footer{padding:34px 0 40px;text-align:center;font-size:.72rem;opacity:.6;line-height:1.7}
 .in{opacity:0;transform:translateY(10px);animation:in .6s forwards}@keyframes in{to{opacity:1;transform:none}}
+::selection{background:#F75602;color:#fff}
+:focus-visible{outline:2px solid #F75602;outline-offset:2px;border-radius:4px}
 </style></head><body>
 <div class="wrap">
 <header><img src="/assets/vliving-logo.png" alt="V&LIVING"><b>PROYECTOR</b></header>
@@ -80,6 +93,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:.72rem;opacity:.6;line-he
 </div>
 <script>
 const $=id=>document.getElementById(id);
+try{navigator.sendBeacon&&navigator.sendBeacon("https://vliving.site/api/track",JSON.stringify({tipo:"pageview",detalle:"/art/proyector"}))}catch(_e){}
 const PLAZAS=[
  {n:"Tulum",precio:155000,renta:1400,ocup:62,pre:false},
  {n:"Cancún",precio:250000,renta:3600,ocup:68,pre:true},
@@ -89,7 +103,9 @@ const PLAZAS=[
  {n:"Mérida",precio:150000,renta:1340,ocup:52,pre:true},
  {n:"CDMX",precio:160000,renta:2080,ocup:72,pre:true}
 ];
-let plazaSel="Tulum";
+const _q=new URLSearchParams(location.search);
+let plazaSel=decodeURIComponent(_q.get("plaza")||"")||localStorage.getItem("py_plaza")||"Tulum";
+if(!PLAZAS.find(x=>x.n===plazaSel))plazaSel="Tulum";
 const fmt=n=>"$"+Math.round(n).toLocaleString("en-US");
 let D=null, plazo=10;
 function calc(){
@@ -139,12 +155,19 @@ async function main(){
   $("metodo").textContent="MÉTODO · "+D.metodo;
   document.querySelectorAll("#plazos .chip").forEach(c=>c.onclick=()=>{plazo=+c.dataset.p;
     document.querySelectorAll("#plazos .chip").forEach(x=>x.classList.toggle("on",+x.dataset.p===plazo));calc();});
-  $("fplazas").innerHTML=PLAZAS.map(z=>`<button class="chip${z.n===plazaSel?" on":""}" data-z="${z.n}">${z.n}</button>`).join("");
+  $("fplazas").innerHTML=PLAZAS.map(z=>`<button class="chip${z.n===plazaSel?" on":""}" aria-pressed="${z.n===plazaSel}" data-z="${z.n}">${z.n}</button>`).join("");
   document.querySelectorAll("#fplazas .chip").forEach(c=>c.onclick=()=>{plazaSel=c.dataset.z;
     const z=PLAZAS.find(x=>x.n===plazaSel);
     $("precio").value=z.precio;$("renta").value=z.renta;$("ocup").value=z.ocup;
     $("prelimNota").style.display=z.pre?"":"none";
+    localStorage.setItem("py_plaza",plazaSel);const u=new URL(location);plazaSel==="Tulum"?u.searchParams.delete("plaza"):u.searchParams.set("plaza",plazaSel);u.searchParams.delete("renta");u.searchParams.delete("ocup");history.replaceState(null,"",u);
     document.querySelectorAll("#fplazas .chip").forEach(x=>x.classList.toggle("on",x.dataset.z===plazaSel));calc();});
+  const _r=_q.get("renta"),_o=_q.get("ocup");
+  if(_r&&+_r>0)$("renta").value=Math.round(+_r);
+  if(_o&&+_o>0)$("ocup").value=Math.min(100,Math.round(+_o));
+  const _z=PLAZAS.find(x=>x.n===plazaSel);
+  if(_z&&plazaSel!=="Tulum"){$("precio").value=_z.precio;if(!_r)$("renta").value=_z.renta;if(!_o)$("ocup").value=_z.ocup;$("prelimNota").style.display=_z.pre?"":"none";
+    document.querySelectorAll("#fplazas .chip").forEach(x=>{x.classList.toggle("on",x.dataset.z===plazaSel);x.setAttribute("aria-pressed",x.dataset.z===plazaSel);});}
   ["precio","renta","ocup","tasaAlt"].forEach(id=>$(id).oninput=calc);
   calc();
 }
